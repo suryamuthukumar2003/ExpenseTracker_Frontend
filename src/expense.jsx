@@ -19,11 +19,11 @@ export default function Expense() {
     // else{
     //   const nextId = expenses[expenses.length - 1].id + 1;
     //   setExpenses([...expenses, { id: nextId, title: title, amount: amount }]);
-    const currentDate = new Date();
-    const year = currentDate.getFullYear().toString();
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, '0');
-    const day = currentDate.getDate().toString().padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
+    const currentDate=new Date();
+    const year=currentDate.getFullYear().toString();
+    const month=(currentDate.getMonth()+1).toString().padStart(2,'0');
+    const day=currentDate.getDate().toString().padStart(2,'0');
+    const format=`${year}-${month}-${day}`;
     fetch('http://localhost:8000/expense/new/6620b2cb493793282298fb97',{
       method:"POST",
       headers:{"Content-Type":"application/json"},
@@ -31,7 +31,7 @@ export default function Expense() {
         amount:amount,
         userID:"6620b2cb493793282298fb97",
         category:title,
-        date:formattedDate
+        date:format
       }),
     }).then(()=>setDummy((prev)=>!prev)).catch((err)=>console.log(err));
     }
