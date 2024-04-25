@@ -5,6 +5,7 @@ import Expense from "./expense";
 import { Navigate ,RouterProvider,createBrowserRouter} from "react-router-dom";
 import { useCookies } from "react-cookie";
 import Login from "./components/Login";
+import Signup from "./components/Signup";
 
 const ProtectedRoute=({children})=>{
   const[cookies]=useCookies();
@@ -23,6 +24,10 @@ const routes=createBrowserRouter([
     path:"/",
     Component:Login
   },
+  {
+    path:"/signup",
+    Component:Signup
+  }
 ]);
 function App() {
   return (

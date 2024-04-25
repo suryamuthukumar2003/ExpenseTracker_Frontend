@@ -1,31 +1,55 @@
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 
+import { Link, useNavigate } from 'react-router-dom'
+import { useCookies } from 'react-cookie'
 function Signup() {
-  return (
-    <div>
-    <Form>
-    <Form.Group className="mb-3" controlId="formBasicEmail">
-      <Form.Label>User Name</Form.Label>
-      <Form.Control type="text" placeholder="Enter UserName" className="input"/>
-    </Form.Group>
-    <Form.Group className="mb-3" controlId="formBasicEmail">
-      <Form.Label>Email address</Form.Label>
-      <Form.Control type="email" placeholder="Enter email" className="input"/>
-      <Form.Text className="text-muted">
-        {`We'll never share your email with anyone else.`}
-      </Form.Text>
-    </Form.Group>
+  const[cookies,setCookie]=useCookies([]);
+  const nav=useNavigate();
+  function handleSubmit(e){
+    e.preventDefault();
+      const username=document.querySelector(".username").value;
+      const email=document.querySelector(".email").value;
+      const password=document.querySelector(".password").value;
+      fetch('http://localhost:8000/user/new',{
+        method:'POST',
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+          userName:username,
+          emailID:email,
+          password:password
+        })
+      }).then(res=>res.json()).then(data=>{
+        const {status,accesstoken}=data;
+        if(status.toLowerCase()==="success"){
+            setCookie('token',accesstoken,{maxAge:3600})
+            const error=document.querySelector(".error");
+            error.textContent="Register successful!!"
+            error.style.display="block"
+            setTimeout(()=>{
+                nav('/Expense')
+            },1000)
+        }else{
+            const error=document.querySelector(".error");
+            error.style.display="block"
+        }
+      })
+  }
 
-    <Form.Group className="mb-3" controlId="formBasicPassword">
-      <Form.Label>Password</Form.Label>
-      <Form.Control type="password" placeholder="Password" className="input" />
-    </Form.Group>
-    <Button variant="primary" type="submit">
-      Submit
-    </Button>
-  </Form>
-    </div>
+
+  return (
+    <div className="signupform">
+    <form  id='signupform' onSubmit={handleSubmit}>
+    <input type="text" className="username" placeholder='Enter User Name'/>
+    <input type="email" className="email" placeholder='Enter Email'required/>
+    <input type="password" className="password" placeholder='Enter
+    Password' required/>
+    <button type="submit">Login</button>
+    <Link to="/">Already have an account</Link>
+    <p className="error" style={{marginTop:"10px"}}>User already exist</p>
+    </form>
+
+</div>
   )
 }
 

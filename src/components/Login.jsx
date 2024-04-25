@@ -1,5 +1,5 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 
 
@@ -42,7 +42,8 @@ const Login = () => {
     <input type="password" className="password" placeholder='Enter
 Password' required/>
     <button type="submit">Login</button>
-    <p className="error">User Not Found, Try to Register</p>
+    <Link to="/signup">Create a new account</Link>
+    <p className="error" style={{marginTop:"10px"}}>User Not Found, Try to Register</p>
     </form>
 
 </div>
