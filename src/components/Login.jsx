@@ -20,6 +20,7 @@ const Login = () => {
             password:password
         })
       }).then(res=>res.json()).then(data=>{
+        console.log(data)
         const {status,accessToken,userDetails}=data;
         if(status.toLowerCase()==="success"){
             setCookie('token',accessToken,{maxAge:3600})
@@ -29,7 +30,7 @@ const Login = () => {
             error.style.display="block"
 
             setTimeout(()=>{
-                nav('/Expense')
+                nav('/expense')
             },1000)
         }else{
             const error=document.querySelector(".error");

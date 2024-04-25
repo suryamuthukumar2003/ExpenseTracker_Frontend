@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ExpenseForm from "./components/expenseForm";
 import ExpenseItem from "./components/expenseItem";
-import { Cookies, useCookies } from "react-cookie";
+import { useCookies } from "react-cookie";
 import Logout from "./components/Logout";
 export default function Expense() {
   <h1>Expense Tracker</h1>;
@@ -29,12 +29,15 @@ export default function Expense() {
     const format=`${year}-${month}-${day}`;
     fetch(`http://localhost:8000/expense/new/${cookies.userID}`,{
       method:"POST",
-      headers:{'Authorization': `Bearer ${cookies.token}`},
+      headers:{
+        "Content-Type": "application/json",
+        'Authorization': `Bearer ${cookies.token}`
+      },
       body:JSON.stringify({
         amount:amount,
         userID:cookies.userID,
         category:title,
-        date:format
+        date:format,
       }),
     }).then(()=>setDummy((prev)=>!prev)).catch((err)=>console.log(err));
     }
@@ -50,18 +53,18 @@ export default function Expense() {
   };
 
 
-  const updateExpense=(id,amount,title)=>{
-    fetch(`http://localhost:8000/expense/update/${id}`,{
-      method:"PATCH",
-      headers:{'Authorization': `Bearer ${cookies.token}`},
-      body:JSON.stringify({
-        amount:amount,
-        userID:cookies.userID,
-        category:title,
-        date:new Date()
-      }),
-    }).then(()=>setDummy((prev)=>!prev)).catch((err)=>console.log(err));
-  }
+  // const updateExpense=(id,amount,title)=>{
+  //   fetch(`http://localhost:8000/expense/update/${id}`,{
+  //     method:"PATCH",
+  //     headers:{'Authorization': `Bearer ${cookies.token}`},
+  //     body:JSON.stringify({
+  //       amount:amount,
+  //       userID:cookies.userID,
+  //       category:title,
+  //       date:new Date()
+  //     }),
+  //   }).then(()=>setDummy((prev)=>!prev)).catch((err)=>console.log(err));
+  // }
   useEffect(()=>{
     fetch(`http://localhost:8000/expense/all/${cookies.userID}`,{headers:{'Authorization': `Bearer ${cookies.token}`}}).then((res)=>res.json()).then((data)=>setExpenses(data)).catch((err)=>console.log(err));
   },[dummy])
@@ -111,7 +114,6 @@ export default function Expense() {
           title={expense.category}
           amount={expense.amount}
           id={expense._id}
-          updateExpense={updateExpense}
           deleteExpense={deleteExpense}
         />
       ))}
