@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import ExpenseForm from "./components/expenseForm";
 import ExpenseItem from "./components/expenseItem";
-
+import { Cookies, useCookies } from "react-cookie";
+import Logout from "./components/Logout";
 export default function Expense() {
   <h1>Expense Tracker</h1>;
   const [expenses, setExpenses] = useState([]);
@@ -11,6 +12,8 @@ export default function Expense() {
     expense: 0,
     balance: 0,
   });
+  const [cookies] = useCookies(['token'])
+
 
   const addExpense = (title, amount) => {
     // if(expenses.length===0){
@@ -24,12 +27,12 @@ export default function Expense() {
     const month=(currentDate.getMonth()+1).toString().padStart(2,'0');
     const day=currentDate.getDate().toString().padStart(2,'0');
     const format=`${year}-${month}-${day}`;
-    fetch('http://localhost:8000/expense/new/6620b2cb493793282298fb97',{
+    fetch(`http://localhost:8000/expense/new/${cookies.userID}`,{
       method:"POST",
-      headers:{"Content-Type":"application/json"},
+      headers:{'Authorization': `Bearer ${cookies.token}`},
       body:JSON.stringify({
         amount:amount,
-        userID:"6620b2cb493793282298fb97",
+        userID:cookies.userID,
         category:title,
         date:format
       }),
@@ -41,6 +44,7 @@ export default function Expense() {
 
     fetch(`http://localhost:8000/expense/delete/${id}`,{
       method:"DELETE",
+      headers:{'Authorization': `Bearer ${cookies.token}`}
       
     }).then(()=>{setDummy((prev)=>!prev)}).catch((err)=>console.log(err));
   };
@@ -49,17 +53,17 @@ export default function Expense() {
   const updateExpense=(id,amount,title)=>{
     fetch(`http://localhost:8000/expense/update/${id}`,{
       method:"PATCH",
-      headers:{"Content-Type":"application/json"},
+      headers:{'Authorization': `Bearer ${cookies.token}`},
       body:JSON.stringify({
         amount:amount,
-        userID:"6620b2cb493793282298fb97",
+        userID:cookies.userID,
         category:title,
         date:new Date()
       }),
     }).then(()=>setDummy((prev)=>!prev)).catch((err)=>console.log(err));
   }
   useEffect(()=>{
-    fetch("http://localhost:8000/expense/all/6620b2cb493793282298fb97").then((res)=>res.json()).then((data)=>setExpenses(data)).catch((err)=>console.log(err));
+    fetch(`http://localhost:8000/expense/all/${cookies.userID}`,{headers:{'Authorization': `Bearer ${cookies.token}`}}).then((res)=>res.json()).then((data)=>setExpenses(data)).catch((err)=>console.log(err));
   },[dummy])
 
   useEffect(() => {
@@ -85,6 +89,7 @@ export default function Expense() {
   return (
     <div>
       <div>
+        <Logout/>
         <div>Expense Tracker</div>
         <div className="balance">Balance: {calculatedAmount.balance}</div>
         <div className="income-expense-container">

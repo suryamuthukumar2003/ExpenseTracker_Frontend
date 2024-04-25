@@ -6,11 +6,11 @@ import { useCookies } from 'react-cookie'
 const Login = () => {
   const[cookies,setCookie]=useCookies([]);
   const nav=useNavigate();
-  function handlesubmit(e){
+ async function handlesubmit(e){
       e.preventDefault();
       const email=document.querySelector(".email").value;
       const password=document.querySelector(".password").value;
-      fetch('http://localhost:8000/user/login',{
+      await fetch('http://localhost:8000/user/login',{
         method:'POST',
         headers:{
             'Content-Type':'application/json'
@@ -20,12 +20,14 @@ const Login = () => {
             password:password
         })
       }).then(res=>res.json()).then(data=>{
-        const {status,accesstoken}=data;
+        const {status,accessToken,userDetails}=data;
         if(status.toLowerCase()==="success"){
-            setCookie('token',accesstoken,{maxAge:3600})
+            setCookie('token',accessToken,{maxAge:3600})
+            setCookie('userID',userDetails.userID, {maxAge:3600})
             const error=document.querySelector(".error");
             error.textContent="Login successful!!"
             error.style.display="block"
+
             setTimeout(()=>{
                 nav('/Expense')
             },1000)

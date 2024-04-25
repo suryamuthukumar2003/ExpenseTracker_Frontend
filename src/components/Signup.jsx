@@ -20,9 +20,9 @@ function Signup() {
           password:password
         })
       }).then(res=>res.json()).then(data=>{
-        const {status,accesstoken}=data;
+        const {status,accessToken}=data;
         if(status.toLowerCase()==="success"){
-            setCookie('token',accesstoken,{maxAge:3600})
+            setCookie('token',accessToken,{maxAge:3600})
             const error=document.querySelector(".error");
             error.textContent="Register successful!!"
             error.style.display="block"

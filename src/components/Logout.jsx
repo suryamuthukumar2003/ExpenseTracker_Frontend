@@ -3,7 +3,7 @@ import { useCookies } from 'react-cookie';
 function Logout() {
     const[cookie,setCookie,removeCookie]=useCookies();
     function handleLogout(){
-        // removeCookie("userId");
+        removeCookie("userID");
         removeCookie("token");  
     }
   return (

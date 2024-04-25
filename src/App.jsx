@@ -9,7 +9,7 @@ import Signup from "./components/Signup";
 
 const ProtectedRoute=({children})=>{
   const[cookies]=useCookies();
-  return cookies.token? children:<Navigate t0='/login'/>
+  return cookies.token? children:<Navigate to='/'/>
 }
 const routes=createBrowserRouter([
   {
