@@ -4,12 +4,8 @@ import ExpenseItem from "./components/expenseItem";
 
 export default function Expense() {
   <h1>Expense Tracker</h1>;
-  const [expenses, setExpenses] = useState([
-    { id: 1, title: "Food", amount: -50 },
-    { id: 2, title: "Movie", amount: -200 },
-    { id: 3, title: "salary", amount: 5000 },
-  ]);
-
+  const [expenses, setExpenses] = useState([]);
+  const[dummy,setDummy]=useState(false);
   const [calculatedAmount, setCalculatedAmount] = useState({
     amount: 0,
     expense: 0,
@@ -17,12 +13,50 @@ export default function Expense() {
   });
 
   const addExpense = (title, amount) => {
-    const nextId = expenses[expenses.length - 1].id + 1;
-    setExpenses([...expenses, { id: nextId, title: title, amount: amount }]);
-  };
+    // if(expenses.length===0){
+    //   setExpenses([{id:1,title:title,amount:amount}]);
+    // }
+    // else{
+    //   const nextId = expenses[expenses.length - 1].id + 1;
+    //   setExpenses([...expenses, { id: nextId, title: title, amount: amount }]);
+
+    fetch('http://localhost:8000/expense/new/6620b2cb493793282298fb97',{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        amount:amount,
+        userID:"6620b2cb493793282298fb97",
+        category:title,
+        date:new Date()
+      }),
+    }).then(()=>setDummy((prev)=>!prev)).catch((err)=>console.log(err));
+    }
+
   const deleteExpense = (id) => {
-    setExpenses(expenses.filter((exp) => exp.id !== id));
+    // setExpenses(expenses.filter((exp) => exp.id !== id));
+
+    fetch(`http://localhost:8000/expense/delete/${id}`,{
+      method:"DELETE",
+      
+    }).then(()=>{setDummy((prev)=>!prev)}).catch((err)=>console.log(err));
   };
+
+
+  const updateExpense=(id,amount,title)=>{
+    fetch(`http://localhost:8000/expense/update/${id}`,{
+      method:"PATCH",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        amount:amount,
+        userID:"6620b2cb493793282298fb97",
+        category:title,
+        date:new Date()
+      }),
+    }).then(()=>setDummy((prev)=>!prev)).catch((err)=>console.log(err));
+  }
+  useEffect(()=>{
+    fetch("http://localhost:8000/expense/all/6620b2cb493793282298fb97").then((res)=>res.json()).then((data)=>setExpenses(data)).catch((err)=>console.log(err));
+  },[dummy])
 
   useEffect(() => {
     let income = 0,
@@ -45,7 +79,7 @@ export default function Expense() {
   }, [expenses]);
 
   return (
-    <>
+    <div>
       <div>
         <div>Expense Tracker</div>
         <div className="balance">Balance: {calculatedAmount.balance}</div>
@@ -64,13 +98,14 @@ export default function Expense() {
       </div>
       {expenses.map((expense) => (
         <ExpenseItem
-          key={expense.id}
-          title={expense.title}
+          key={expense._id}
+          title={expense.category}
           amount={expense.amount}
-          id={expense.id}
+          id={expense._id}
+          updateExpense={updateExpense}
           deleteExpense={deleteExpense}
         />
       ))}
-    </>
+    </div>
   );
 }
