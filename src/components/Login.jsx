@@ -10,7 +10,7 @@ const Login = () => {
       e.preventDefault();
       const email=document.querySelector(".email").value;
       const password=document.querySelector(".password").value;
-      await fetch('http://localhost:8000/user/login',{
+      await fetch(`${import.meta.env.VITE_API_URL}/user/login`,{
         method:'POST',
         headers:{
             'Content-Type':'application/json'
@@ -20,7 +20,6 @@ const Login = () => {
             password:password
         })
       }).then(res=>res.json()).then(data=>{
-        console.log(data)
         const {status,accessToken,userDetails}=data;
         if(status.toLowerCase()==="success"){
             setCookie('token',accessToken,{maxAge:3600})

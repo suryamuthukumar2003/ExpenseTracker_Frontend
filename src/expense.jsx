@@ -6,14 +6,13 @@ import Logout from "./components/Logout";
 export default function Expense() {
   <h1>Expense Tracker</h1>;
   const [expenses, setExpenses] = useState([]);
-  const[dummy,setDummy]=useState(false);
+  const [dummy, setDummy] = useState(false);
   const [calculatedAmount, setCalculatedAmount] = useState({
     amount: 0,
     expense: 0,
     balance: 0,
   });
-  const [cookies] = useCookies(['token'])
-
+  const [cookies] = useCookies(["token"]);
 
   const addExpense = (title, amount) => {
     // if(expenses.length===0){
@@ -22,36 +21,40 @@ export default function Expense() {
     // else{
     //   const nextId = expenses[expenses.length - 1].id + 1;
     //   setExpenses([...expenses, { id: nextId, title: title, amount: amount }]);
-    const currentDate=new Date();
-    const year=currentDate.getFullYear().toString();
-    const month=(currentDate.getMonth()+1).toString().padStart(2,'0');
-    const day=currentDate.getDate().toString().padStart(2,'0');
-    const format=`${year}-${month}-${day}`;
-    fetch(`http://localhost:8000/expense/new/${cookies.userID}`,{
-      method:"POST",
-      headers:{
+    const currentDate = new Date();
+    const year = currentDate.getFullYear().toString();
+    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+    const day = currentDate.getDate().toString().padStart(2, "0");
+    const format = `${year}-${month}-${day}`;
+    fetch(`${import.meta.env.VITE_API_URL}/expense/new/${cookies.userID}`, {
+      method: "POST",
+      headers: {
         "Content-Type": "application/json",
-        'Authorization': `Bearer ${cookies.token}`
+        Authorization: `Bearer ${cookies.token}`,
       },
-      body:JSON.stringify({
-        amount:amount,
-        userID:cookies.userID,
-        category:title,
-        date:format,
+      body: JSON.stringify({
+        amount: amount,
+        userID: cookies.userID,
+        category: title,
+        date: format,
       }),
-    }).then(()=>setDummy((prev)=>!prev)).catch((err)=>console.log(err));
-    }
+    })
+      .then(() => setDummy((prev) => !prev))
+      .catch((err) => console.log(err));
+  };
 
   const deleteExpense = (id) => {
     // setExpenses(expenses.filter((exp) => exp.id !== id));
 
-    fetch(`http://localhost:8000/expense/delete/${id}`,{
-      method:"DELETE",
-      headers:{'Authorization': `Bearer ${cookies.token}`}
-      
-    }).then(()=>{setDummy((prev)=>!prev)}).catch((err)=>console.log(err));
+    fetch(`${import.meta.env.VITE_API_URL}/expense/delete/${id}`, {
+      method: "DELETE",
+      headers: { Authorization: `Bearer ${cookies.token}` },
+    })
+      .then(() => {
+        setDummy((prev) => !prev);
+      })
+      .catch((err) => console.log(err));
   };
-
 
   // const updateExpense=(id,amount,title)=>{
   //   fetch(`http://localhost:8000/expense/update/${id}`,{
@@ -65,9 +68,14 @@ export default function Expense() {
   //     }),
   //   }).then(()=>setDummy((prev)=>!prev)).catch((err)=>console.log(err));
   // }
-  useEffect(()=>{
-    fetch(`http://localhost:8000/expense/all/${cookies.userID}`,{headers:{'Authorization': `Bearer ${cookies.token}`}}).then((res)=>res.json()).then((data)=>setExpenses(data)).catch((err)=>console.log(err));
-  },[dummy])
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_API_URL}/expense/all/${cookies.userID}`, {
+      headers: { Authorization: `Bearer ${cookies.token}` },
+    })
+      .then((res) => res.json())
+      .then((data) => setExpenses(data))
+      .catch((err) => console.log(err));
+  }, [dummy]);
 
   useEffect(() => {
     let income = 0,
@@ -92,7 +100,7 @@ export default function Expense() {
   return (
     <div>
       <div>
-        <Logout/>
+        <Logout />
         <div>Expense Tracker</div>
         <div className="balance">Balance: {calculatedAmount.balance}</div>
         <div className="income-expense-container">

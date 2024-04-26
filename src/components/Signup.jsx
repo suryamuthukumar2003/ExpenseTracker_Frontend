@@ -4,12 +4,12 @@ import { useCookies } from 'react-cookie'
 function Signup() {
   const[cookies,setCookie]=useCookies([]);
   const nav=useNavigate();
-  function handleSubmit(e){
+  async function handleSubmit(e){
     e.preventDefault();
       const username=document.querySelector(".username").value;
       const email=document.querySelector(".email").value;
       const password=document.querySelector(".password").value;
-      fetch('http://localhost:8000/user/new',{
+      await fetch(`${import.meta.env.VITE_API_URL}/user/new`,{
         method:'POST',
         headers:{
             'Content-Type':'application/json'
@@ -20,14 +20,15 @@ function Signup() {
           password:password
         })
       }).then(res=>res.json()).then(data=>{
-        const {status,accessToken}=data;
+        const {status,accessToken,userDetails}=data;
         if(status.toLowerCase()==="success"){
             setCookie('token',accessToken,{maxAge:3600})
+            setCookie('userID',userDetails.userID, {maxAge:3600})
             const error=document.querySelector(".error");
             error.textContent="Register successful!!"
             error.style.display="block"
             setTimeout(()=>{
-                nav('/Expense')
+                nav('/expense')
             },1000)
         }else{
             const error=document.querySelector(".error");
