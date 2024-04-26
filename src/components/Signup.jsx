@@ -1,8 +1,10 @@
 
 import { Link, useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
+import { useState } from 'react';
 function Signup() {
   const[cookies,setCookie]=useCookies([]);
+  const[showToggle,setShowToggle]=useState(false)
   const nav=useNavigate();
   async function handleSubmit(e){
     e.preventDefault();
@@ -43,8 +45,11 @@ function Signup() {
     <form  id='signupform' onSubmit={handleSubmit}>
     <input type="text" className="username" placeholder='Enter User Name'/>
     <input type="email" className="email" placeholder='Enter Email'required/>
-    <input type="password" className="password" placeholder='Enter
-    Password' required/>
+    <input type={showToggle?"text":"password"} className="password" placeholder='Enter Password' required/>
+    <div style={{display:"flex"}}>
+    <input type='checkbox' id='password' style={{marginRight:"5px"}} onClick={()=>setShowToggle((prev)=>!prev)}/>
+    <label htmlFor='password'>Show Password</label>
+    </div>
     <button type="submit">Login</button>
     <Link to="/">Already have an account</Link>
     <p className="error" style={{marginTop:"10px"}}>User already exist</p>
