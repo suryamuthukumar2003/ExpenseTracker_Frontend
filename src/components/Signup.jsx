@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import { useState } from 'react';
 function Signup() {
-  const[cookies,setCookie]=useCookies([]);
+  const[cookie,setCookie]=useCookies([]);
   const[showToggle,setShowToggle]=useState(false)
   const nav=useNavigate();
   async function handleSubmit(e){

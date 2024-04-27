@@ -22,10 +22,10 @@ export default function Expense() {
     //   const nextId = expenses[expenses.length - 1].id + 1;
     //   setExpenses([...expenses, { id: nextId, title: title, amount: amount }]);
     const currentDate = new Date();
-    const year = currentDate.getFullYear().toString();
-    const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
-    const day = currentDate.getDate().toString().padStart(2, "0");
-    const format = `${year}-${month}-${day}`;
+    // const year = currentDate.getFullYear().toString();
+    // const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+    // const day = currentDate.getDate().toString().padStart(2, "0");
+    // const format = `${year}-${month}-${day}`;
     fetch(`${import.meta.env.VITE_API_URL}/expense/new/${cookies.userID}`, {
       method: "POST",
       headers: {
@@ -36,7 +36,7 @@ export default function Expense() {
         amount: amount,
         userID: cookies.userID,
         category: title,
-        date: format,
+        date: currentDate,
       }),
     })
       .then(() => setDummy((prev) => !prev))
@@ -55,7 +55,9 @@ export default function Expense() {
       })
       .catch((err) => console.log(err));
   };
-
+  const getUpdateId=(id)=>{
+    
+  }
   // const updateExpense=(id,amount,title)=>{
   //   fetch(`http://localhost:8000/expense/update/${id}`,{
   //     method:"PATCH",
@@ -117,11 +119,13 @@ export default function Expense() {
         <ExpenseForm addExpense={addExpense} />
       </div>
       {expenses.map((expense) => (
+        
         <ExpenseItem
           key={expense._id}
           title={expense.category}
           amount={expense.amount}
           id={expense._id}
+          date={expense.date}
           deleteExpense={deleteExpense}
         />
       ))}
