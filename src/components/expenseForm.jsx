@@ -1,13 +1,22 @@
-import { useState } from "react";
-
-const ExpenseForm = ({ addExpense }) => {
-  const [title, setTitle] = useState("");
-  const [amount, setAmount] = useState(0);
+import { useState ,useContext,useEffect} from "react";
+import { UserContext } from "../expense";
+const ExpenseForm = ({ addExpense ,updateExpense}) => {
+  // const [title, setTitle] = useState("");
+  // const [amount, setAmount] = useState(0);
   const [errors, setErrors] = useState({});
+
+  const {
+    title,
+    setTitle,
+    amount,
+    setAmount,
+    showUpdateForm,
+    setShowUpdateForm,
+    id
+  } = useContext(UserContext);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(title, amount);
     let err = {};
 
     if (title.length < 3) {
@@ -26,12 +35,27 @@ const ExpenseForm = ({ addExpense }) => {
     setTitle("");
     setAmount(0);
   };
+
+  const handleSubmitUpdate = (e) => {
+    e.preventDefault();
+    updateExpense(title, amount,id);
+    setTitle("");
+    setAmount(0);
+    console.log("updated");
+    setShowUpdateForm(false);
+  };
+  useEffect(() => {
+    setTitle(title);
+    setAmount(amount);
+  }, [showUpdateForm]);
+
+
   const handleTitleChange = (e) => {
     setTitle(e.target.value);
     setErrors({ ...errors, title: "" });
   };
   const handleAmountChange = (e) => {
-    setAmount(parseInt(e.target.value));
+    setAmount(e.target.value);
     setErrors({ ...errors, amount: "" });
   };
 
@@ -57,7 +81,16 @@ const ExpenseForm = ({ addExpense }) => {
         />
         {errors.amount ? <div className="error">{errors.amount}</div> : null}
       </div>
-      <button type="submit">Add Transaction</button>
+      {/* <button type="submit">Add Transaction</button> */}
+      {showUpdateForm ? (
+        <button type="submit" onClick={handleSubmitUpdate} disabled={!title}>
+          Update Transaction
+        </button>
+      ) : (
+        <button type="submit" onClick={handleSubmit} disabled={!title}>
+          Add Transaction
+        </button>
+      )}
     </form>
   );
 };

@@ -1,7 +1,7 @@
 
 import "./App.css";
 
-import Expense from "./expense";
+import {Expense} from "./expense";
 import { Navigate ,RouterProvider,createBrowserRouter} from "react-router-dom";
 import { useCookies } from "react-cookie";
 import Login from "./components/Login";

@@ -1,13 +1,18 @@
+import { UserContext } from "../expense";
+import { useContext,useState } from "react";
 const ExpenseItem = (props) => {
-  const { id, title, amount, deleteExpense ,date ,updateExpense} = props
+  const { id, title, amount, deleteExpense ,date} = props
+  const {setTitle,setAmount,setShowUpdateForm,setId}=useContext(UserContext);
 
-  const handleDelete = () => {
-    deleteExpense(id)
-  }
 
-  const handleUpdate=()=>{
-    updateExpense(id)
-  }
+  const handleUpdateContext = () => {
+    // document.getElementById("top").scrollIntoView({ behavior: "smooth" });
+    setTitle(title);
+    setAmount(amount);
+    setId(id);
+    // updateExpense(updatedTitle, updatedAmount,id);
+    setShowUpdateForm(true);
+  };
   const format=(date)=>{
     const datee=new Date(date)
     const year = datee.getFullYear().toString();
@@ -23,8 +28,16 @@ const ExpenseItem = (props) => {
         <div className="expense-amount">{format(date)}</div>
         <div className="expense-amount">{amount}</div>
       </div>
-      <button className="delete-btn" onClick={handleUpdate}>Delete</button>
-      <button className="delete-btn" onClick={handleDelete}>Delete</button>
+      <button className="update-btn" onClick={() =>handleUpdateContext()}>Update</button>
+      <button className="delete-btn" onClick={() => {
+          if (confirm("Are you sure!") == true) {
+            deleteExpense(id);
+          } else {
+            console.log("cancelled");
+          }
+        }}
+        >Delete
+        </button>
     </div>
   )
 }

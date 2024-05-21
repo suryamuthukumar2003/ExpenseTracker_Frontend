@@ -8,7 +8,7 @@ function Logout() {
     }
   return (
     <div>
-        <button onClick={handleLogout} style={{margin:"10px",padding:"10px"}}>Logout</button>
+        <button onClick={handleLogout}>Logout</button>
     </div>
   )
 }
