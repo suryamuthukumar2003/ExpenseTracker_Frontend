@@ -34,27 +34,28 @@ function Signup() {
             },1000)
         }else{
             const error=document.querySelector(".error");
-            error.style.display="block"
+            error.style.visibility="visible"
         }
       })
   }
 
 
   return (
-    <div className="signupform">
-    <form  id='signupform' onSubmit={handleSubmit}>
-    <input type="text" className="username" placeholder='Enter User Name'/>
-    <input type="email" className="email" placeholder='Enter Email'required/>
-    <input type={showToggle?"text":"password"} className="password" placeholder='Enter Password' required/>
+    <div className='d-flex justify-content-center align-items-center' style={{height:"100vh",width:"100%"}}>
+      <div className="">
+      <form  id='signupform' className='p-5' onSubmit={handleSubmit}>
+    <input type="text" className="username" placeholder='Enter User Name' autoComplete='off'/>
+    <input type="email" className="email" placeholder='Enter Email'required autoComplete='off'/>
+    <input type={showToggle?"text":"password"} className="password" placeholder='Enter Password' required autoComplete='off'/>
     <div style={{display:"flex"}}>
     <input type='checkbox' id='password' style={{marginRight:"5px"}} onClick={()=>setShowToggle((prev)=>!prev)}/>
     <label htmlFor='password'>Show Password</label>
     </div>
-    <button type="submit">Login</button>
+    <button type="submit" autoComplete='off' style={{width:"70%"}}>Sign Up</button>
     <Link to="/">Already have an account</Link>
-    <p className="error" style={{marginTop:"10px"}}>User already exist</p>
+    <p className="error" style={{marginTop:"10px",visibility:"hidden"}}>User already exist</p>
     </form>
-
+      </div>
 </div>
   )
 }

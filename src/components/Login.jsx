@@ -34,25 +34,28 @@ const Login = () => {
             },1000)
         }else{
             const error=document.querySelector(".error");
-            error.style.display="block"
+            error.style.visibility="visible"
         }
       })
   }
   return (
-    <div className="loginform">
-    <form  id='loginform' onSubmit={handlesubmit}>
-    <input type="email" className="email" placeholder='Enter Email'required/>
+    <div className='d-flex justify-content-center align-items-center' style={{height:"100vh",width:"100%"}}>
+      <div className="loginform">
+    <form  id='loginform' onSubmit={handlesubmit} className='p-5'>
+    <input type="email" className="email" placeholder='Enter Email'required autoComplete='off'/>
     <input type={showToggle?"text":"password"} className="password" placeholder='Enter Password' required/>
     <div style={{display:"flex"}}>
-    <input type='checkbox' id='password' style={{marginRight:"5px"}} onClick={()=>setShowToggle((prev)=>!prev)}/>
+    <input type='checkbox' id='password' style={{marginRight:"5px"}} onClick={()=>setShowToggle((prev)=>!prev)} autoComplete='off'/>
     <label htmlFor='password'>Show Password</label>
     </div>
-    <button type="submit">Login</button>
+    <button type="submit" style={{width:"70%"}}>Login</button>
     <Link to="/signup">Create a new account</Link>
-    <p className="error" style={{marginTop:"10px"}}>User Not Found, Try to Register</p>
+    <p className="error" style={{marginTop:"10px",visibility:"hidden"}}>User Not Found, Try to Register</p>
     </form>
 
 </div>
+    </div>
+    
   )
 }
 
